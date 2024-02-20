@@ -74,7 +74,7 @@ namespace MedicSystem.Core.Application.Services
 
         public async Task<List<CitaViewModel>> GetAllViewModel()
         {
-            var citaList = await _citaRepository.GetAllWithIncludeAsync(new List<string> { "ResultadoDeLaboratorio", "Medico", "Usuario" });
+            var citaList = await _citaRepository.GetAllWithIncludeAsync(new List<string> { "Medico", "Usuario", "Paciente" });
 
             return citaList.Where(cita => cita.UsuarioId == userViewModel.Id).Select(c => new CitaViewModel
             {
@@ -84,7 +84,11 @@ namespace MedicSystem.Core.Application.Services
                 Causa = c.Causa,
                 EstadoCita = c.EstadoCita,
                 PacienteId = c.PacienteId,
+                NombrePaciente = c.Paciente.Nombre,
+                ApellidoPaciente = c.Paciente.Apellido,
                 MedicoId = c.MedicoId,
+                NombreMedico = c.Medico.Nombre,
+                ApellidoMedico = c.Medico.Apellido,
                
             }).ToList();
         }

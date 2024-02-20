@@ -2,11 +2,6 @@
 using MedicSystem.Core.Domain.Entities;
 using MedicSystem.Infrastructure.Persistence.Contexts;
 using MedicSystem.Infrastructure.Persistence.Repositories;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MedicSystem.Infrastucture.Persistence.Repositories
 {

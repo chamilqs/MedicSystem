@@ -56,7 +56,6 @@ namespace MedicSystem.Core.Application.Services
 
         public async Task<List<PruebaDeLaboratorioViewModel>> GetAllViewModel()
         {
-
             var pruebaList = await _pruebaRepository.GetAllAsync();
 
             return pruebaList.Select(user => new PruebaDeLaboratorioViewModel

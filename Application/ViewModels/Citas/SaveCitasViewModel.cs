@@ -13,14 +13,19 @@ namespace MedicSystem.Core.Application.ViewModels.Citas
         [Required(ErrorMessage = "El campo del paciente es requerido.")]
         public int PacienteId { get; set; }
         [Required(ErrorMessage = "El campo del médico es requerido.")]
+        [Range(1, int.MaxValue, ErrorMessage = "El campo del médico es requerido.")]
         public int MedicoId { get; set; }
         [Required(ErrorMessage = "El campo de la fecha es requerido.")]
+        [DataType(DataType.Date)]
         public string Fecha { get; set; }
         [Required(ErrorMessage = "El campo de la hora es requerido.")]
+        [DataType(DataType.Time)]
         public string Hora { get; set; }
         [Required(ErrorMessage = "El campo de la causa es requerido.")]
+        [DataType(DataType.Text)]
         public string Causa { get; set; }
         [Required(ErrorMessage = "El campo del estado de la cita es requerido.")]
+        [Range(1, int.MaxValue, ErrorMessage = "El campo del estado de la cita es requerido.")]
         public EstadoCita? EstadoCita { get; set; }
         public int UsuarioId { get; set; }
 

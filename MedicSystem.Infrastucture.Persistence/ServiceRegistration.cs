@@ -32,6 +32,7 @@ namespace MedicSystem.Infrastructure.Persistence
             services.AddTransient<IMedicoRepository, MedicoRepository>();
             services.AddTransient<IPacienteRepository, PacienteRepository>();
             services.AddTransient<ICitaRepository, CitaRepository>();
+            services.AddTransient<IResultadoDeLaboratorioRepository, ResultadoDeLaboratorioRepository>();
             #endregion
         }
     }

@@ -15,6 +15,7 @@ namespace MedicSystem.Core.Application
             services.AddTransient<IMedicoService, MedicoService>();
             services.AddTransient<IPacienteService, PacienteService>();
             services.AddTransient<ICitaService, CitaService>();
+            services.AddTransient<IResultadoDeLaboratorioService, ResultadoDeLaboratorioService>();
             #endregion
         }
     }

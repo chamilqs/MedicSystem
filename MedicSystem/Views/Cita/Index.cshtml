@@ -1,0 +1,69 @@
+﻿@using MedicSystem.Core.Application.ViewModels.Citas;
+@using MedicSystem.Core.Domain.Enum;
+@model List<CitaViewModel>
+@{
+    ViewData["Title"] = "Citas";
+}
+
+<div class="container-fluid">
+
+    <div class="row mb-3">
+        <div class="col-3 offset-9">
+            <a asp-controller="Cita" asp-action="Add" class="btn btn-outline-success">Agregar nueva cita</a>
+        </div>
+    </div>
+
+    <div class="row">
+
+        @if (Model.Count == 0 || Model == null)
+        {
+            <h2>
+                No hay citas registradas en el sistema.
+            </h2>
+        }
+        else
+        {
+            @foreach (CitaViewModel item in Model)
+            {
+            <div class="col-4">
+                <div class="card shadow-sm">
+                    <div class="card-header bg-dark text-light">
+                        <h4>Cita con el paciente: @item.NombrePaciente @item.ApellidoPaciente</h4>
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Fecha: </strong>@item.Fecha</p>
+                        <p><strong>Hora: </strong>@item.Hora</p>
+                        <p><strong>Causa: </strong>@item.Causa</p>
+                        <p><strong>Estado de la cita: </strong>@item.EstadoCita</p>
+                        <p class="card-text"></p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="btn-group">
+
+                                @if (item.EstadoCita == EstadoCita.PendienteConsulta)
+                                {
+                                    <a asp-controller="Cita" asp-action="Consult" asp-route-id="@item.Id" class="btn btn-sm btn-primary fw-bold">Consultar</a>
+                                    <a asp-controller="Cita" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger fw-bold">Eliminar</a>
+                                }
+                                else if (item.EstadoCita == EstadoCita.PendienteResultados)
+                                {
+                                    <a asp-controller="Cita" asp-action="Results" asp-route-id="@item.Id" class="btn btn-sm btn-primary fw-bold">Consultar resultados</a>
+                                    <a asp-controller="Cita" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger fw-bold">Eliminar</a>
+                                }else
+                                {
+                                    <a asp-controller="Cita" asp-action="WatchResults" asp-route-id="@item.Id" class="btn btn-sm btn-warning fw-bold">Ver resultados</a>
+                                    <a asp-controller="Cita" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger fw-bold">Eliminar</a>
+                                }
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            }
+        }
+
+
+
+    </div>
+</div>
+

@@ -1,0 +1,28 @@
+﻿@using MedicSystem.Core.Application.ViewModels.Citas;
+@model SaveCitasViewModel
+@{
+    ViewData["Title"] = "Eliminar cita";
+}
+
+<div class="row">
+
+    <div class="col-6 offset-3">
+        <div class="card mt-4">
+            <div class="card-header bg-danger text-light">
+                <h4>¿Está seguro que desea eliminar la cita del paciente @ViewBag.Paciente del sistema?</h4>
+            </div>
+            <div class="card-body">
+                <form method="post" asp-controller="Cita" asp-action="DeletePost">
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn btn-danger fw-bold">Eliminar</button>
+                    <a asp-controller="Cita" asp-action="Index" class="btn btn-primary fw-bold">Regresar</a>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
