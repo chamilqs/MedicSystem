@@ -5,6 +5,7 @@ using MedicSystem.Core.Domain.Entities;
 using MedicSystem.Infrastructure.Persistence.Contexts;
 using MedicSystem.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,8 +57,16 @@ namespace MedicSystem.Infrastucture.Persistence.Repositories
 
         public override async Task UpdateAsync(Usuario entity)
         {
-            entity.Password = PasswordEncryption.Encrypt256Hash(entity.Password);
-            await base.UpdateAsync(entity);
+            if(PasswordEncryption.IsHashed(entity.Password))
+            {
+                await base.UpdateAsync(entity);
+            }
+            else
+            {
+                entity.Password = PasswordEncryption.Encrypt256Hash(entity.Password);
+                await base.UpdateAsync(entity);
+            }
+
         }
 
     }

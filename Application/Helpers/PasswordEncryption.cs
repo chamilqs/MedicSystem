@@ -24,5 +24,29 @@ namespace MedicSystem.Core.Application.Helpers
 
             }
         }
+
+        public static bool IsHashed(string input)
+        {
+            if (string.IsNullOrEmpty(input))
+            {
+                return false;
+            }
+
+            if (input.Length != 64)
+            {
+                return false;
+            }
+
+            foreach (char c in input)
+            {
+                if (!Uri.IsHexDigit(c))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
     }
 }

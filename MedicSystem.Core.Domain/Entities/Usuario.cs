@@ -9,7 +9,7 @@ namespace MedicSystem.Core.Domain.Entities
         public string Apellido { get; set; }
         public string NombreUsuario { get; set; }
         public string Correo { get; set; }
-        public string Password { get; set; }
+        public string? Password { get; set; }
         public TipoUsuario TipoUsuario { get; set; }
 
         // Relaciones: Al crear un paciente, medico o cita, se le asigna un usuario.

@@ -12,7 +12,7 @@ namespace MedicSystem.Core.Application.ViewModels.Usuarios
         public string Apellido { get; set; }
         public string NombreUsuario { get; set; }
         public string Correo { get; set; }
-        public string Password { get; set; }
+        public string? Password { get; set; }
         public TipoUsuario TipoUsuario { get; set; }
 
         public ICollection<PacienteViewModel>? Pacientes { get; set; }

@@ -6,6 +6,7 @@ using MedicSystem.Core.Domain.Enum;
 using MedicSystem.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.IdentityModel.Tokens;
 using static MedicSystem.Helpers.ValidarSesion;
 
 
@@ -131,25 +132,43 @@ namespace MedicSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(SaveUsuarioViewModel vm)
         {
+            var usuario = await _usuarioService.GetByIdSaveViewModel(vm.Id);
+
             if (_validarsesion.HasUser() == false)
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+
             if (!ModelState.IsValid)
             {          
                 ViewBag.TiposUsuario = Get.TiposUsuario();
                 return View("SaveUsuario", vm);
             }
 
-            // aqui vamos a comparar la contraseña hash con la contraseña actual
-            var usuario = await _usuarioService.GetByIdSaveViewModel(vm.Id);
-            var verify = PasswordEncryption.Encrypt256Hash(vm.PasswordActual);
-
-            if (usuario.Password != verify)
+            if (!vm.PasswordActual.IsNullOrEmpty())
             {
-                ModelState.AddModelError("Validacion", "La contraseña actual no coincide.");
-                ViewBag.TiposUsuario = Get.TiposUsuario();
-                return View("SaveUsuario", vm);
+                if(vm.Password.IsNullOrEmpty() || vm.ConfirmarPassword.IsNullOrEmpty())
+                {
+                    ViewBag.TiposUsuario = Get.TiposUsuario();
+                    ModelState.AddModelError("Validacion", "Las contraseñas no coiciden.");
+                    return View("SaveUsuario", vm);
+                }
+
+                // aqui vamos a comparar la contraseña hash con la contraseña actual
+                var verify = PasswordEncryption.Encrypt256Hash(vm.PasswordActual);
+
+                if (usuario.Password != verify)
+                {
+                    ModelState.AddModelError("Validacion", "La contraseña actual no coincide.");
+                    ViewBag.TiposUsuario = Get.TiposUsuario();
+                    return View("SaveUsuario", vm);
+                }
+
+            }
+
+            if (vm.PasswordActual.IsNullOrEmpty())
+            {
+                vm.Password = usuario.Password;
             }
 
             await _usuarioService.Update(vm);

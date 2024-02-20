@@ -43,14 +43,13 @@
                             <span asp-validation-for="NombreUsuario" class="text-danger"></span>
                         </div>
 
-                        @if (editMode)
-                        {
+                        @if (editMode){
+
                             <div class="mb-3">
                                 <label asp-for="PasswordActual" class="form-label">Contraseña actual: </label>
-                                <input required asp-for="PasswordActual" class="form-control" />
-
-                            </div>                            
-                        }
+                                <input asp-for="PasswordActual" class="form-control" />
+                            </div>  
+                        }                         
 
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label">Nueva Contraseña: </label>

@@ -23,14 +23,12 @@ namespace MedicSystem.Core.Application.ViewModels.Usuarios
         [DataType(DataType.EmailAddress)]
         public string Correo { get; set; }
         
-        [Required(ErrorMessage = "La contraseña es requerida.")]
         [DataType(DataType.Password)]
-        public string Password { get; set; }
+        public string? Password { get; set; }
         
         [Compare(nameof(Password), ErrorMessage = "Las contraseñas no coiciden.")]
-        [Required(ErrorMessage = "Debe confirmar la contraseña.")]
         [DataType(DataType.Password)]
-        public string ConfirmarPassword { get; set; }
+        public string? ConfirmarPassword { get; set; }
 
         [DataType(DataType.Password)]
         public string? PasswordActual { get; set; }
