@@ -1,0 +1,29 @@
+﻿@using MedicSystem.Core.Application.ViewModels.PruebasDeLaboratorio;
+@model SavePruebaDeLaboratorioViewModel
+@{
+    ViewData["Title"] = "Eliminar prueba";
+}
+
+<div class="row">
+
+    <div class="col-6 offset-3">
+        <div class="card mt-4">
+            <div class="card-header bg-danger text-light">
+                <h4>¿Está seguro que desea eliminar la prueba @Model.Nombre?</h4>
+            </div>
+            <div class="card-body">
+
+                <form method="post" asp-controller="PruebaDeLaboratorio" asp-action="DeletePost">
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <a asp-controller="PruebaDeLaboratorio" asp-action="Index" class="btn btn-primary">Regresar</a>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,95 @@
+﻿@using MedicSystem.Core.Application.ViewModels.Usuarios;
+@using MedicSystem.Core.Application.Helpers;
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<UsuarioViewModel>("CurrentUser");
+}
+@model SaveUsuarioViewModel
+@{
+    bool editMode = Model.Id == 0 ? false : true;
+    ViewData["Title"] = "Usuarios";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4 class="text-center">@(editMode ? "Modo de edición" : "Registrando un nuevo usuario")</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-controller="Usuario" asp-action="@(editMode ? "Edit":"Add")">
+
+                        <div class="mt-2 mb-2">
+                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label">Nombre: </label>
+                            <input asp-for="Nombre" class="form-control" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Apellido" class="form-label">Apellido: </label>
+                            <input asp-for="Apellido" class="form-control" />
+                            <span asp-validation-for="Apellido" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="NombreUsuario" class="form-label">Nombre de usuario: </label>
+                            <input asp-for="NombreUsuario" class="form-control" />
+                            <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                        </div>
+
+                        @if (editMode)
+                        {
+                            <div class="mb-3">
+                                <label asp-for="PasswordActual" class="form-label">Contraseña actual: </label>
+                                <input required asp-for="PasswordActual" class="form-control" />
+
+                            </div>                            
+                        }
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label">Nueva Contraseña: </label>
+                            <input asp-for="Password" class="form-control"/>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ConfirmarPassword" class="form-label">Confirmar contraseña: </label>
+                            <input asp-for="ConfirmarPassword" class="form-control" />
+                            <span asp-validation-for="ConfirmarPassword" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Correo" class="form-label">Correo electrónico: </label>
+                            <input asp-for="Correo" class="form-control" />
+                            <span asp-validation-for="Correo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="TipoUsuario" class="form-label">Nivel de acceso: </label>
+                            <select asp-for="TipoUsuario" asp-items="@(IEnumerable<SelectListItem>)(ViewBag.TiposUsuario)" class="form-select">
+                                <option value="0">Seleccione una opcion</option>
+
+                            </select>
+                            <span asp-validation-for="TipoUsuario" class="text-danger"></span>
+                        </div>
+
+                        <input type="hidden" asp-for="Id"/>
+
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a asp-controller="Usuario" asp-action="@(User == null ? "Index" : "MantenimientoUsuario")" class="btn btn-warning">Volver atras</a>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+

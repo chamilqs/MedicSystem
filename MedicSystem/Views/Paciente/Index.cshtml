@@ -1,0 +1,51 @@
+﻿@using MedicSystem.Core.Application.ViewModels.Pacientes;
+@model List<PacienteViewModel>
+@{
+    ViewData["Title"] = "Pacientes";
+}
+
+<div class="container-fluid">
+
+    <div class="row mb-3">
+        <div class="col-3 offset-9">
+            <a asp-controller="Paciente" asp-action="Add" class="btn btn-outline-success">Agregar nuevo paciente</a>
+        </div>
+    </div>
+
+    <div class="row">
+
+        @if (Model == null || Model.Count == 0)
+        {
+            <h2>No hay pacientes registrados en el sistema.</h2>
+        }
+        else
+        {
+            @foreach (PacienteViewModel item in Model)
+            {
+                <div class="col-4">
+                    <div class="card shadow-sm">
+                        <img class="bd-placeholder-img card-img-top img-product-size" src="@item.Foto" />
+
+                        <div class="card-body">
+                            <h4 class="card-title text-center">@item.Nombre @item.Apellido</h4>
+                            <p class="card-text"><strong>Teléfono: </strong>@item.Telefono</p>
+                            <p><strong>Dirección: </strong>@item.Direccion</p>
+                            <p><strong>Cédula: </strong>@item.Cedula</p>
+                            @if (item.Fumador){<p><strong>¿Es fumador?: </strong>Si</p>}
+                            else{<p><strong>¿Es fumador?: </strong>No</p>}
+                            @if (item.Alergias){<p><strong>¿Sufre de alergias?: </strong>Si</p>}
+                            else{<p><strong>¿Sufre de alergias?: </strong>No</p>}
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a asp-controller="Paciente" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning fw-bold">Editar</a>
+                                    <a asp-controller="Paciente" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger fw-bold">Eliminar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+</div>

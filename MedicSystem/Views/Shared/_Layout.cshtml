@@ -1,0 +1,73 @@
+﻿@using Microsoft.AspNetCore.Http
+@using MedicSystem.Core.Application.Helpers;
+@using MedicSystem.Core.Application.ViewModels.Usuarios
+@inject IHttpContextAccessor httpContextAccessor
+@{
+    var User = httpContextAccessor.HttpContext.Session.Get<UsuarioViewModel>("CurrentUser");
+    var AccessLevel = httpContextAccessor.HttpContext.Session.Get<int>("AccessLevel");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MedicSystem</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary navbar-light border-bottom box-shadow mb-3 fs-4">
+            <div class="container">
+                <a class="navbar-brand text-white fw-bold fs-4" asp-area="" asp-controller="@(User!= null ? "Home" : "Usuario")" asp-action="Index">Medic System</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
+                        @if (User != null)
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-bold" asp-controller="Usuario" asp-action="@(AccessLevel == 0 ? "MantenimientoUsuario" : "NoAccess")">Usuarios</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-bold" asp-controller="Medico" asp-action="@(AccessLevel == 0 ? "Index" : "NoAccess")">Medicos</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-bold" asp-controller="PruebaDeLaboratorio" asp-action="@(AccessLevel == 0 ? "Index" : "NoAccess")">Pruebas de laboratorio</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-bold" asp-controller="Paciente" asp-action="@(AccessLevel == 0 ? "Index" : "NoAccess")">Pacientes</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-bold" asp-controller="" asp-action="">Citas</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-white fw-bold" asp-controller="" asp-action="">Resultados de pruebas</a>
+                            </li>
+                            <li class="nav-item align-content-end">
+                                <a class="nav-link text-white fw-bold" asp-controller="Usuario" asp-action="Logout">LogOut</a>
+                            </li>
+                        }                       
+                        else
+                        {
+                            
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <div class="container">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

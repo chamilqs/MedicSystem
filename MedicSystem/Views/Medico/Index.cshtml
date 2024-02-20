@@ -1,0 +1,47 @@
+﻿@using MedicSystem.Core.Application.ViewModels.Medicos;
+@model List<MedicoViewModel>
+@{
+    ViewData["Title"] = "Medicos";
+}
+
+<div class="container-fluid">
+
+    <div class="row mb-3">
+        <div class="col-3 offset-9">
+            <a asp-controller="Medico" asp-action="Add" class="btn btn-outline-success">Agregar nuevo médico</a>
+        </div>
+    </div>
+
+    <div class="row">
+
+        @if (Model == null || Model.Count == 0)
+        {
+            <h2>No hay médicos registrados en el sistema.</h2>
+        }
+        else
+        {
+            @foreach (MedicoViewModel item in Model)
+            {
+                <div class="col-4">
+                    <div class="card shadow-sm">
+                        <img class="bd-placeholder-img card-img-top img-product-size" src="@item.Foto" />
+
+                        <div class="card-body">
+                            <h4 class="card-title text-center">@item.Nombre @item.Apellido</h4>
+                            <p class="card-text"><strong>Teléfono: </strong>@item.Telefono</p>
+                            <p><strong>Correo: </strong>@item.Correo</p>
+                            <p><strong>Cédula: </strong>@item.Cedula</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a asp-controller="Medico" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning fw-bold">Editar</a>
+                                    <a asp-controller="Medico" asp-action="Delete" asp-route-id="@item.Id" class="btn btn-sm btn-danger fw-bold">Eliminar</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+
+</div>

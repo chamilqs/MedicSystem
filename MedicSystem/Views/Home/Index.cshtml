@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Inicio";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-4">
+            <div class="card shadow-sm">
+                <a asp-controller="Usuario" asp-action="MantenimientoUsuario">
+                    <img class="bd-placeholder-img card-img-top img-product-size" width="450px" height="400px" src="https://img.freepik.com/free-psd/3d-icon-social-media-app_23-2150049569.jpg" />
+                </a>
+                <div class="card-body">
+                    <a asp-controller="Usuario" asp-action="MantenimientoUsuario">
+                        <h4 class="card-title fw-bold text-center">GESTIÓN DE USUARIOS</h4>
+                    </a>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card shadow-sm">
+                <a asp-controller="Medico" asp-action="Index">
+                    <img class="bd-placeholder-img card-img-top img-product-size" width="450px" height="400px" src="https://img.freepik.com/free-vector/health-professional-team-illustration_23-2148509384.jpg" />
+                </a>
+                <div class="card-body">
+                <a asp-controller="Medico" asp-action="Index">
+                    <h4 class="card-title fw-bold text-center">GESTIÓN DE MÉDICOS</h4>
+                </a>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card shadow-sm">
+                <a asp-controller="Paciente" asp-action="Index">
+                    <img class="bd-placeholder-img card-img-top img-product-size" width="450px" height="400px" src="https://img.freepik.com/free-vector/hospital-wheelchair-concept-illustration_114360-8211.jpg" />
+                </a>
+                <div class="card-body">
+                <a asp-controller="Paciente" asp-action="Index">
+                    <h4 class="card-title fw-bold text-center">GESTIÓN DE PACIENTES</h4>
+                </a>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+        </div>          
+        <div class="col-4">
+            <div class="card shadow-sm mt-3">
+                <a asp-controller="PruebaDeLaboratorio" asp-action="Index">
+                    <img class="bd-placeholder-img card-img-top img-product-size" width="450px" height="400px" src="https://img.freepik.com/free-vector/medical-lab-blood-test-from-sample-tube-human-hand-person-holding-vial-near-list-with-results-flat-vector-illustration-report-medicine-concept-banner-website-design-landing-web-page_74855-26064.jpg" />
+                </a>
+
+                <div class="card-body">
+                    <a asp-controller="PruebaDeLaboratorio" asp-action="Index">
+                        <h4 class="card-title fw-bold text-center">PRUEBAS DE LABORATORIO</h4>
+                    </a>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+        </div>
+      
+        <div class="col-4">
+            <div class="card shadow-sm mt-3">
+                <a asp-controller="Cita" asp-action="Index">
+                    <img class="bd-placeholder-img card-img-top img-product-size" width="450px" height="400px" src="https://img.freepik.com/free-vector/medical-checkup-concept-illustration_114360-17857.jpg" />
+                </a>
+
+                <div class="card-body">
+                <a asp-controller="Cita" asp-action="Index">
+                    <h4 class="card-title fw-bold text-center">CITAS MÉDICAS</h4>
+                </a>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <div class="card shadow-sm mt-3">
+            <a asp-controller="ResultadoDeLaboratorio" asp-action="Index">
+                    <img class="bd-placeholder-img card-img-top img-product-size" width="450px" height="400px" src="https://img.freepik.com/premium-vector/flat-design-medical-test-tube-medical-test-document-medical-healthcare-illustration_751874-694.jpg" />
+            </a>
+                <div class="card-body">
+                <a asp-controller="ResultadoDeLaboratorio" asp-action="Index">
+                    <h4 class="card-title fw-bold text-center">RESULTADOS DE LABORATORIO</h4>
+                </a>
+                    <p class="card-text"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

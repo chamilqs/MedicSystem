@@ -1,0 +1,55 @@
+﻿@using MedicSystem.Core.Application.ViewModels.PruebasDeLaboratorio;
+@model List<PruebaDeLaboratorioViewModel>
+@{
+    ViewData["Title"] = "Pruebas de laboratorio";
+}
+
+<h1 class="text-center">Pruebas de laboratorio</h1>
+
+<div>
+    <a asp-controller="PruebaDeLaboratorio" asp-action="Add" class="btn btn-success">Nueva prueba de laboratorio</a>
+</div>
+
+<table class="table table-hover mt-4 table-striped">
+    <thead>
+        <tr>
+            <th class="text-center">
+                Nombre
+            </th>
+
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (Model.Count == 0 || Model == null)
+        {
+            <tr>
+                <td colspan="2" class="text-center">
+                    No hay pruebas de laboratorio registradas
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (PruebaDeLaboratorioViewModel item in Model)
+            {
+                <tr>
+                    <td class="text-center">
+                        @Html.DisplayFor(modelItem => item.Nombre)
+                    </td>
+                    <td>
+                        <a asp-controller="PruebaDeLaboratorio" asp-action="Edit" class="btn btn-warning" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-controller="PruebaDeLaboratorio" asp-action="Delete" class="btn btn-danger" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+
+
+    </tbody>
+</table>
+
+

@@ -1,0 +1,42 @@
+﻿@using MedicSystem.Core.Application.ViewModels.PruebasDeLaboratorio;
+@model SavePruebaDeLaboratorioViewModel
+@{
+    bool editMode = Model.Id == 0 ? false : true;
+    ViewData["Title"] = "Pruebas de Laboratorio";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4 class="text-center">@(editMode ? "Modo de edición" : "Registrando una nueva prueba")</h4>
+                </div>
+                <div class="card-body">
+                    <form method="post" asp-controller="PruebaDeLaboratorio" asp-action="@(editMode ? "Edit":"Add")">
+
+                        <div class="mt-2 mb-2">
+                            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label">Nombre de la prueba: </label>
+                            <input asp-for="Nombre" class="form-control" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>                       
+
+                        <input type="hidden" asp-for="Id" />
+
+                        <button type="submit" class="btn btn-primary">Guardar</button>
+                        <a asp-controller="PruebaDeLaboratorio" asp-action="Index" class="btn btn-warning">Volver atras</a>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+

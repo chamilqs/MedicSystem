@@ -1,0 +1,29 @@
+﻿@using MedicSystem.Core.Application.ViewModels.Usuarios;
+@model SaveUsuarioViewModel
+@{
+    ViewData["Title"] = "Elimianr usuario";
+}
+
+<div class="row">
+
+    <div class="col-6 offset-3">
+        <div class="card">
+            <div class="card-header bg-danger text-light">
+                <h4>¿Está seguro que desea eliminar el usuario de @Model.Nombre @Model.Apellido?</h4>
+            </div>
+            <div class="card-body">
+
+                <form method="post" asp-controller="Usuario" asp-action="DeletePost">
+
+                    <input type="hidden" asp-for="Id" />
+
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                    <a asp-controller="Usuario" asp-action="MantenimientoUsuario" class="btn btn-primary">Regresar</a>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</div>
