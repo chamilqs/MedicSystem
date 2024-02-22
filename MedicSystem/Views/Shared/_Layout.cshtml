@@ -17,7 +17,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary navbar-light border-bottom box-shadow mb-3 fs-4">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm bg-primary navbar-light border-bottom box-shadow mb-3 fs-5">
             <div class="container">
                 <a class="navbar-brand text-white fw-bold fs-4" asp-area="" asp-controller="@(User!= null ? "Home" : "Usuario")" asp-action="Index">Medic System</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -38,13 +38,13 @@
                                 <a class="nav-link text-white fw-bold" asp-controller="PruebaDeLaboratorio" asp-action="@(AccessLevel == 0 ? "Index" : "NoAccess")">Pruebas de laboratorio</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-controller="Paciente" asp-action="@(AccessLevel == 0 ? "Index" : "NoAccess")">Pacientes</a>
+                                <a class="nav-link text-white fw-bold" asp-controller="Paciente" asp-action="@(AccessLevel == 1 ? "Index" : "NoAccess")">Pacientes</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-controller="Cita" asp-action="Index">Citas</a>
+                                <a class="nav-link text-white fw-bold" asp-controller="Cita" asp-action="@(AccessLevel == 1 ? "Index" : "NoAccess")">Citas</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link text-white fw-bold" asp-controller="" asp-action="">Resultados de pruebas</a>
+                                <a class="nav-link text-white fw-bold" asp-controller="ResultadoDeLaboratorio" asp-action="@(AccessLevel == 1 ? "Index" : "NoAccess")">Resultados de pruebas</a>
                             </li>
                             <li class="nav-item align-content-end">
                                 <a class="nav-link text-white fw-bold" asp-controller="Usuario" asp-action="Logout">LogOut</a>

@@ -1,0 +1,54 @@
+﻿@using MedicSystem.Core.Application.ViewModels.ResultadosDeLaboratorio;
+@using MedicSystem.Core.Domain.Enum;
+@model List<ResultadoDeLaboratorioViewModel>
+@{
+    ViewData["Title"] = "Citas";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+
+        @if (Model.Count == 0 || Model == null)
+        {
+            <h2>
+                No hay citas registradas en el sistema.
+            </h2>
+        }
+        else
+        {
+            @foreach (ResultadoDeLaboratorioViewModel item in Model)
+            {
+                if (@item.EstadoResultado == EstadoResultado.Completado)
+                {
+                    <div class="col-4">
+                        <div class="card shadow-sm mt-4">
+                            <div class="card-header bg-success text-center text-light fw-bold">
+                                <h5 class="fw-bold">Cita con el paciente: @item.NombrePaciente @item.ApellidoPaciente</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Prueba realizada: </strong>@item.NombrePrueba</p>
+                                <p><strong>Estado de la prueba: </strong>@item.EstadoResultado</p>
+                                <p><strong>Resultado de la prueba: </strong>@item.Resultado</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <h2>Los resultados de esta cita no han sido reportados.</h2>
+                }
+            }
+
+            <div class="d-flex justify-content-center align-items-center mt-5">
+                <div class="btn-group">
+                    <a asp-controller="Cita" asp-action="Index" asp-route-id="@ViewBag.IdCita" class="btn btn-lg btn-danger fw-bold">Cerrar resultados</a>
+                </div>
+            </div>
+        }
+
+
+
+    </div>
+</div>
+

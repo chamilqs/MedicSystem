@@ -6,6 +6,7 @@ namespace MedicSystem.Core.Domain.Entities
     {
         public string Nombre { get; set; }
         public ICollection<ResultadoDeLaboratorio>? ResultadosDeLaboratorio { get; set; }
+        public ICollection<Cita>? Citas { get; set; }
 
     }
 }

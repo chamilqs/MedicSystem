@@ -20,9 +20,6 @@ namespace MedicSystem.Core.Domain.Entities
         // Un paciente puede tener muchas citas
         public ICollection<Cita>? Citas { get; set; }
 
-        // Un paciente puede tener muchos medicos
-        public ICollection<Medico>? Medicos { get; set; }
-
         // Relacion con la tabla Usuario
         public int UsuarioId { get; set; }
         public Usuario? Usuario { get; set; }

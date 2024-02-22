@@ -1,0 +1,86 @@
+﻿@using MedicSystem.Core.Application.ViewModels.ResultadosDeLaboratorio;
+@using MedicSystem.Core.Domain.Enum;
+@model List<ResultadoDeLaboratorioViewModel>
+@{
+    ViewData["Title"] = "Citas";
+}
+
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid">
+        <form method="post" asp-controller="ResultadoDeLaboratorio" asp-action="Search" class="d-flex" role="search">
+            <input name="cedula" class="form-control me-2" placeholder="Ej: 40298321585" aria-label="Search">
+            <button type="submit" class="btn btn-outline-success">Buscar</button>
+        </form>
+    </div>
+</nav>
+
+<table class="table table-hover mt-4">
+    <thead>
+        <tr>
+            <th class="text-center">
+                Nombre
+            </th>
+            <th class="text-center">
+                Apellido
+            </th>
+            <th class="text-center">
+                Cédula
+            </th>
+            <th class="text-center">
+                Prueba
+            </th>
+            <th class="text-center">
+                Estado
+            </th>
+            <th>
+                Acciones
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if (Model.Count == 0 || Model == null)
+        {
+            <tr>
+                <td colspan="2" class="text-center">
+                    No hay resultados en estado pendiente para visualizar en el sistema.
+                </td>
+            </tr>
+        }
+        else
+        {
+            @foreach (ResultadoDeLaboratorioViewModel item in Model)
+            {
+                if (item.EstadoResultado == EstadoResultado.Pendiente)
+                {
+                    <tr>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.NombrePaciente)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.ApellidoPaciente)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.CedulaPaciente)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.NombrePrueba)
+                        </td>
+                        <td class="text-center">
+                            @Html.DisplayFor(modelItem => item.EstadoResultado)
+                        </td>
+                        <td>
+                            <a asp-controller="ResultadoDeLaboratorio" asp-action="Reportar" asp-route-id="@item.Id" class="btn btn-sm btn-primary fw-bold">Reportar</a>
+                        </td>
+                    </tr>
+                }
+                else
+                {
+
+                }
+            }
+        }
+    </tbody>
+</table>
+
+

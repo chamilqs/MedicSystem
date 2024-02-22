@@ -21,6 +21,11 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
             return View(await _pruebaService.GetAllViewModel());
         }
 
@@ -35,6 +40,15 @@ namespace MedicSystem.Controllers
 
         public IActionResult Add()
         {
+            if (!_validarsesion.HasUser())
+            {
+                return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
             SavePruebaDeLaboratorioViewModel vm = new();
             return View("SavePrueba", vm);
         }
@@ -42,6 +56,15 @@ namespace MedicSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(SavePruebaDeLaboratorioViewModel vm)
         {
+            if (!_validarsesion.HasUser())
+            {
+                return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View("SavePrueba", vm);
@@ -67,6 +90,10 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
 
             SavePruebaDeLaboratorioViewModel vm = await _pruebaService.GetByIdSaveViewModel(id);
             return View("SavePrueba", vm);
@@ -79,6 +106,11 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
             if (!ModelState.IsValid)
             {
                 return View("SavePrueba", vm);
@@ -92,6 +124,12 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
+
             return View(await _pruebaService.GetByIdSaveViewModel(id));
         }
 
@@ -102,6 +140,11 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
             await _pruebaService.Delete(id);
             return RedirectToRoute(new { controller = "PruebaDeLaboratorio", action = "Index" });
         }

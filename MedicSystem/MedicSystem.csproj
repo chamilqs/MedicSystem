@@ -23,8 +23,4 @@
     <ProjectReference Include="..\MedicSystem.Infrastucture.Persistence\MedicSystem.Infrastucture.Persistence.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\ResultadoDeLaboratorio\" />
-  </ItemGroup>
-
 </Project>

@@ -7,7 +7,7 @@ namespace MedicSystem.Core.Domain.Entities
     {
         public int PacienteId { get; set; }
         public Paciente? Paciente { get; set; }
-        public string Resultado { get; set; }
+        public string? Resultado { get; set; }
         public EstadoResultado EstadoResultado { get; set; }
 
         // Navigation property
@@ -16,6 +16,8 @@ namespace MedicSystem.Core.Domain.Entities
         public ICollection<PruebaDeLaboratorio>? PruebasDeLaboratorio { get; set; }
         
         // Many to many
-        public ICollection<Cita> Citas { get; set; }
+        public int CitaId { get; set; }
+        public Cita? Cita { get; set; }
+        public ICollection<Cita>? Citas { get; set; }
     }
 }

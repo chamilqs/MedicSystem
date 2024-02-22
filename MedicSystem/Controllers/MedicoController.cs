@@ -21,6 +21,11 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarSession.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
             return View(await _medicoService.GetAllViewModel());
         }
 
@@ -39,6 +44,10 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarSession.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
 
             SaveMedicoViewModel vm = new();
             return View("SaveMedico", vm);
@@ -50,6 +59,10 @@ namespace MedicSystem.Controllers
             if (!_validarSession.HasUser())
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (!_validarSession.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
             }
 
             if (!ModelState.IsValid)
@@ -75,6 +88,10 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarSession.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
 
             SaveMedicoViewModel vm = await _medicoService.GetByIdSaveViewModel(id);
             return View("SaveMedico", vm);
@@ -86,6 +103,10 @@ namespace MedicSystem.Controllers
             if (!_validarSession.HasUser())
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (!_validarSession.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
             }
 
             if (!ModelState.IsValid)
@@ -106,6 +127,10 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarSession.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
 
             return View(await _medicoService.GetByIdSaveViewModel(id));
         }
@@ -116,6 +141,10 @@ namespace MedicSystem.Controllers
             if (!_validarSession.HasUser())
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (!_validarSession.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
             }
 
             await _medicoService.Delete(id);

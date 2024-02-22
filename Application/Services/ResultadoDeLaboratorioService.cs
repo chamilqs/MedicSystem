@@ -4,49 +4,44 @@ using MedicSystem.Core.Application.Interfaces.Services;
 using MedicSystem.Core.Application.ViewModels.ResultadosDeLaboratorio;
 using MedicSystem.Core.Application.ViewModels.Usuarios;
 using MedicSystem.Core.Domain.Entities;
+using MedicSystem.Core.Domain.Enum;
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MedicSystem.Core.Application.Services
 {
     public class ResultadoDeLaboratorioService : IResultadoDeLaboratorioService
     {
         private readonly IResultadoDeLaboratorioRepository _resultadoDeLaboratorioRepository;
-        private readonly IHttpContextAccessor _httpContextAccessor;
-        private readonly UsuarioViewModel userViewModel;
 
         public ResultadoDeLaboratorioService(IResultadoDeLaboratorioRepository resultadoDeLaboratorioRepository, IHttpContextAccessor httpContextAccessor)
         {
             _resultadoDeLaboratorioRepository = resultadoDeLaboratorioRepository;
-            _httpContextAccessor = httpContextAccessor;
-            userViewModel = _httpContextAccessor.HttpContext.Session.Get<UsuarioViewModel>("CurrentUser");
+
         }
 
         public async Task<SaveResultadoDeLaboratorioViewModel> Add(SaveResultadoDeLaboratorioViewModel vm)
         {
-            ResultadoDeLaboratorio resultadoDeLaboratorio = new();
+            ResultadoDeLaboratorio resultado = new();
 
-            resultadoDeLaboratorio.Id = vm.Id;
-            resultadoDeLaboratorio.PacienteId = vm.PacienteId;
-            resultadoDeLaboratorio.Resultado = vm.Resultado;
-            resultadoDeLaboratorio.EstadoResultado = vm.EstadoResultado;
-            resultadoDeLaboratorio.PruebaDeLaboratorioId = vm.PruebaDeLaboratorioId;
+            // resultadoDeLaboratorio.Id = vm.Id;
+            resultado.PacienteId = vm.PacienteId;
+            resultado.Resultado = vm.Resultado;
+            resultado.EstadoResultado = vm.EstadoResultado;
+            resultado.PruebaDeLaboratorioId = vm.PruebaDeLaboratorioId;
+            resultado.CitaId = vm.CitaId;
 
-            resultadoDeLaboratorio = await _resultadoDeLaboratorioRepository.AddAsync(resultadoDeLaboratorio);
+            resultado = await _resultadoDeLaboratorioRepository.AddAsync(resultado);
 
-            SaveResultadoDeLaboratorioViewModel vmResultadoDeLaboratorio = new();
+            SaveResultadoDeLaboratorioViewModel vmResultado = new();
 
-            vmResultadoDeLaboratorio.Id = resultadoDeLaboratorio.Id;
-            vmResultadoDeLaboratorio.PacienteId = resultadoDeLaboratorio.PacienteId;
-            vmResultadoDeLaboratorio.Resultado = resultadoDeLaboratorio.Resultado;
-            vmResultadoDeLaboratorio.EstadoResultado = resultadoDeLaboratorio.EstadoResultado;
-            vmResultadoDeLaboratorio.PruebaDeLaboratorioId = resultadoDeLaboratorio.PruebaDeLaboratorioId;
+            vmResultado.Id = resultado.Id;
+            vmResultado.PacienteId = resultado.PacienteId;
+            vmResultado.Resultado = resultado.Resultado;
+            vmResultado.EstadoResultado = resultado.EstadoResultado;
+            vmResultado.PruebaDeLaboratorioId = resultado.PruebaDeLaboratorioId;
+            vmResultado.CitaId = resultado.CitaId;
 
-            return vmResultadoDeLaboratorio;
+            return vmResultado;
 
         }
 
@@ -58,7 +53,7 @@ namespace MedicSystem.Core.Application.Services
 
         public async Task<List<ResultadoDeLaboratorioViewModel>> GetAllViewModel()
         {
-            var resultadosList = await _resultadoDeLaboratorioRepository.GetAllWithIncludeAsync(new List<string> { "Cita" });
+            var resultadosList = await _resultadoDeLaboratorioRepository.GetAllWithIncludeAsync(new List<string> { "Paciente", "PruebaDeLaboratorio" });
 
             return resultadosList.Select(resultado => new ResultadoDeLaboratorioViewModel
             {
@@ -66,10 +61,12 @@ namespace MedicSystem.Core.Application.Services
                 PacienteId = resultado.PacienteId,
                 NombrePaciente = resultado.Paciente.Nombre,
                 ApellidoPaciente = resultado.Paciente.Apellido,
+                CedulaPaciente = resultado.Paciente.Cedula,
                 Resultado = resultado.Resultado,
                 EstadoResultado = resultado.EstadoResultado,
                 PruebaDeLaboratorioId = resultado.PruebaDeLaboratorioId,
-                NombrePrueba = resultado.PruebaDeLaboratorio.Nombre
+                NombrePrueba = resultado.PruebaDeLaboratorio.Nombre,
+                CitaId = resultado.CitaId
 
             }).ToList();
         }
@@ -85,22 +82,93 @@ namespace MedicSystem.Core.Application.Services
             vm.Resultado = resultado.Resultado;
             vm.EstadoResultado = resultado.EstadoResultado;
             vm.PruebaDeLaboratorioId = resultado.PruebaDeLaboratorioId;
+            vm.CitaId = resultado.CitaId;
 
             return vm;
 
         }
 
+        public async Task<List<ResultadoDeLaboratorioViewModel>> GetByCitaIdAsync(int citaId)
+        {
+            var resultadoList = await _resultadoDeLaboratorioRepository.GetAllWithIncludeAsync(new List<string> { "Paciente", "PruebaDeLaboratorio" });
+
+            var listViewModels = resultadoList.Select(resultado => new ResultadoDeLaboratorioViewModel
+            {
+                Id = resultado.Id,
+                PacienteId = resultado.PacienteId,
+                NombrePaciente = resultado.Paciente.Nombre,
+                ApellidoPaciente = resultado.Paciente.Apellido,
+                CedulaPaciente = resultado.Paciente.Cedula,
+                Resultado = resultado.Resultado,
+                EstadoResultado = resultado.EstadoResultado,
+                PruebaDeLaboratorioId = resultado.PruebaDeLaboratorioId,
+                NombrePrueba = resultado.PruebaDeLaboratorio.Nombre,
+                CitaId = resultado.CitaId
+
+            }).ToList();
+
+            if (citaId != 0)
+            {
+                listViewModels = listViewModels.Where(cita => cita.CitaId.Equals(citaId)).ToList();
+            }
+
+            return listViewModels;
+        }
+
         public async Task Update(SaveResultadoDeLaboratorioViewModel vm)
         {
-            ResultadoDeLaboratorio resultadoDeLaboratorio = new();
+            ResultadoDeLaboratorio resultado = new();
 
-            resultadoDeLaboratorio.Id = vm.Id;
-            resultadoDeLaboratorio.PacienteId = vm.PacienteId;
-            resultadoDeLaboratorio.Resultado = vm.Resultado;
-            resultadoDeLaboratorio.EstadoResultado = vm.EstadoResultado;
-            resultadoDeLaboratorio.PruebaDeLaboratorioId = vm.PruebaDeLaboratorioId;
+            resultado.Id = vm.Id;
+            resultado.PacienteId = vm.PacienteId;
+            resultado.Resultado = vm.Resultado;
+            resultado.EstadoResultado = vm.EstadoResultado;
+            resultado.PruebaDeLaboratorioId = vm.PruebaDeLaboratorioId;
+            resultado.CitaId = vm.CitaId;
 
+            await _resultadoDeLaboratorioRepository.UpdateAsync(resultado);
+        }
+
+        public async Task UpdateState(int id, EstadoResultado estadoResultado)
+        {
+            var resultadoDeLaboratorio = await _resultadoDeLaboratorioRepository.GetByIdAsync(id);
+            resultadoDeLaboratorio.EstadoResultado = estadoResultado;
             await _resultadoDeLaboratorioRepository.UpdateAsync(resultadoDeLaboratorio);
         }
+
+        public async Task UpdateResultado(int id, string resultado)
+        {
+            var resultadoDeLaboratorio = await _resultadoDeLaboratorioRepository.GetByIdAsync(id);
+            resultadoDeLaboratorio.Resultado = resultado;
+            await _resultadoDeLaboratorioRepository.UpdateAsync(resultadoDeLaboratorio);
+        }
+
+        public async Task<List<ResultadoDeLaboratorioViewModel>> GetByCedulaAsync(string cedula)
+        {
+            var resultadoList = await _resultadoDeLaboratorioRepository.GetAllWithIncludeAsync(new List<string> { "Paciente", "PruebaDeLaboratorio" });
+
+            var listViewModels = resultadoList.Select(resultado => new ResultadoDeLaboratorioViewModel
+            {
+                Id = resultado.Id,
+                PacienteId = resultado.PacienteId,
+                NombrePaciente = resultado.Paciente.Nombre,
+                ApellidoPaciente = resultado.Paciente.Apellido,
+                CedulaPaciente = resultado.Paciente.Cedula,
+                Resultado = resultado.Resultado,
+                EstadoResultado = resultado.EstadoResultado,
+                PruebaDeLaboratorioId = resultado.PruebaDeLaboratorioId,
+                NombrePrueba = resultado.PruebaDeLaboratorio.Nombre,
+                CitaId = resultado.CitaId
+
+            }).ToList();
+
+            if (cedula != null)
+            {
+                listViewModels = listViewModels.Where(resultado => resultado.CedulaPaciente.Trim().Contains(cedula.Trim())).ToList();
+            }
+
+            return listViewModels;
+        }
+
     }
 }

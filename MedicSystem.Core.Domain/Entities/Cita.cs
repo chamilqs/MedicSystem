@@ -1,5 +1,6 @@
 ﻿using MedicSystem.Core.Domain.Common;
 using MedicSystem.Core.Domain.Enum;
+using System.Diagnostics.Contracts;
 
 namespace MedicSystem.Core.Domain.Entities
 {
@@ -19,8 +20,8 @@ namespace MedicSystem.Core.Domain.Entities
 
         // Relacion con la tabla Usuario
         public int UsuarioId { get; set; }
-        public Usuario? Usuario { get; set; }
-
+        public Usuario? Usuario { get; set; }      
+        public PruebaDeLaboratorio? PruebaDeLaboratorio { get; set; }
         // Many to many 
         public ICollection<ResultadoDeLaboratorio> ResultadosDeLaboratorio { get; set; }
 

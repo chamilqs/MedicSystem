@@ -15,17 +15,19 @@ namespace MedicSystem.Controllers
     public class CitaController : Controller
     {
         private readonly ICitaService _citaService;
+        private readonly IResultadoDeLaboratorioService _resultadoDeLaboratorioService;
         private readonly IMedicoService _medicoService;
         private readonly IPacienteService _pacienteService;
         private readonly ValidarSesion _validarsesion;
         private readonly ApplicationContext _dbContext;
         
-        public CitaController(ICitaService citaService, ValidarSesion validarSesion, IMedicoService medicoService, IPacienteService pacienteService, ApplicationContext dbContext)
+        public CitaController(ICitaService citaService, ValidarSesion validarSesion, IMedicoService medicoService, IPacienteService pacienteService, IResultadoDeLaboratorioService resultadoDeLaboratorioService, ApplicationContext dbContext)
         {
             _citaService = citaService;
             _validarsesion = validarSesion;
             _medicoService = medicoService;
             _pacienteService = pacienteService;
+            _resultadoDeLaboratorioService = resultadoDeLaboratorioService;
             _dbContext = dbContext;
         }
         public async Task<IActionResult> Index()
@@ -33,7 +35,12 @@ namespace MedicSystem.Controllers
             if (!_validarsesion.HasUser())
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }             
+            else if (_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
             }
+
             return View(await _citaService.GetAllViewModel());
         }
 
@@ -43,6 +50,7 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+
             return View("~/Views/Shared/Error.cshtml");
         }
 
@@ -51,6 +59,10 @@ namespace MedicSystem.Controllers
             if (!_validarsesion.HasUser())
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
             }
 
             SaveCitasViewModel vm = new();
@@ -67,58 +79,23 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
-
-            //if (!ModelState.IsValid)
-            //{
-            //    vm.Medicos = await _medicoService.GetAllViewModel();
-            //    vm.Pacientes = await _pacienteService.GetAllViewModel();
-            //    return View("SaveCita", vm);
-            //}
-
-            if (!vm.EstadoCita.HasValue)
+            else if (_validarsesion.isAdmin())
             {
-                vm.EstadoCita = EstadoCita.PendienteConsulta;
-                Console.WriteLine(vm.Hora);
-                SaveCitasViewModel cita = await _citaService.Add(vm);
-
-            }
-
-            return RedirectToRoute(new { controller = "Cita", action = "Index" });
-        }
-
-        public async Task<IActionResult> Edit(int id)
-        {
-            if (!_validarsesion.HasUser())
-            {
-                return RedirectToRoute(new { controller = "Usuario", action = "Index" });
-            }
-            SaveCitasViewModel vm = await _citaService.GetByIdSaveViewModel(id);
-
-            vm.Medicos = await _medicoService.GetAllViewModel();
-            vm.Pacientes = await _pacienteService.GetAllViewModel();
-
-            return View("SaveCita", vm);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Edit(SaveCitasViewModel vm, ResultadoDeLaboratorio vmR)
-        {
-            var cita = await _citaService.GetByIdSaveViewModel(vm.Id);
-
-            if (!_validarsesion.HasUser())
-            {
-                return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+                return View("~/Views/Shared/Error.cshtml");
             }
 
             if (!ModelState.IsValid)
             {
+                vm.Medicos = await _medicoService.GetAllViewModel();
+                vm.Pacientes = await _pacienteService.GetAllViewModel();
                 return View("SaveCita", vm);
             }
 
-            if(cita.EstadoCita == EstadoCita.PendienteConsulta)
+            if (!vm.EstadoCita.HasValue)
             {
-                // Tratar de hacerlo redireccionando a la vista de resultados de laboratorio
-                await _citaService.Add(vm);
+                vm.EstadoCita = EstadoCita.PendienteConsulta;
+                SaveCitasViewModel cita = await _citaService.Add(vm);
+
             }
 
             return RedirectToRoute(new { controller = "Cita", action = "Index" });
@@ -129,6 +106,10 @@ namespace MedicSystem.Controllers
             if (!_validarsesion.HasUser())
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
             }
 
             var paciente = await _dbContext.Citas
@@ -151,27 +132,57 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
 
             await _citaService.Delete(id);
             return RedirectToRoute(new { controller = "Cita", action = "Index" });
         }
 
-        public async Task<IActionResult> Consult(int id)
+        public async Task<IActionResult> ConsultarResultados(int id)
         {
             if (!_validarsesion.HasUser())
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
 
-            var cita = await _citaService.GetByIdSaveViewModel(id);
-            var paciente = await _pacienteService.GetByIdSaveViewModel(cita.PacienteId);
-            var medico = await _medicoService.GetByIdSaveViewModel(cita.MedicoId);
-
-            ViewBag.Paciente = $"{paciente.Nombre} {paciente.Apellido}";
-            ViewBag.Medico = $"{medico.Nombre} {medico.Apellido}";
             ViewBag.IdCita = id;
+            return View("Resultados", await _resultadoDeLaboratorioService.GetByCitaIdAsync(id));
+        }
 
-            return View("~/Views/ResultadoDeLaboratorio/New.cshtml", new ResultadoDeLaboratorio());
+        public async Task<IActionResult> FinalizarCita(int id)
+        {
+            if (!_validarsesion.HasUser())
+            {
+                return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
+            await _citaService.UpdateState(id, EstadoCita.Completada);
+            return RedirectToRoute(new { controller = "Cita", action = "Index" });
+        }
+
+        public async Task<IActionResult> VerResultados(int id)
+        {
+            if (!_validarsesion.HasUser())
+            {
+                return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
+            return View("VerResultados", await _resultadoDeLaboratorioService.GetByCitaIdAsync(id));
         }
 
     }

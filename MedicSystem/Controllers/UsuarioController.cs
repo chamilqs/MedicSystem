@@ -28,6 +28,7 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Home", action = "Index" });
             }
+
             return View();
         }
 
@@ -78,10 +79,16 @@ namespace MedicSystem.Controllers
 
         public async Task<IActionResult> MantenimientoUsuario(UsuarioViewModel vm)
         {
-            if (_validarsesion.HasUser() == false)
+            if (!_validarsesion.HasUser())
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
+
             return View(await _usuarioService.GetAllViewModel());
         }
 
@@ -123,6 +130,11 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
             SaveUsuarioViewModel vm = await _usuarioService.GetByIdSaveViewModel(id);
 
             ViewBag.TiposUsuario = Get.TiposUsuario(); 
@@ -137,6 +149,10 @@ namespace MedicSystem.Controllers
             if (_validarsesion.HasUser() == false)
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
+            }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
             }
 
             if (!ModelState.IsValid)
@@ -180,6 +196,11 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
             return View(await _usuarioService.GetByIdSaveViewModel(id));
         }
 
@@ -190,6 +211,11 @@ namespace MedicSystem.Controllers
             {
                 return RedirectToRoute(new { controller = "Usuario", action = "Index" });
             }
+            else if (!_validarsesion.isAdmin())
+            {
+                return View("~/Views/Shared/Error.cshtml");
+            }
+
             await _usuarioService.Delete(id);
             return RedirectToRoute(new { controller = "Usuario", action = "MantenimientoUsuario" });
         }

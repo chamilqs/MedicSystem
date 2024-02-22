@@ -4,6 +4,7 @@ using MedicSystem.Core.Application.Interfaces.Services;
 using MedicSystem.Core.Application.ViewModels.Citas;
 using MedicSystem.Core.Application.ViewModels.Usuarios;
 using MedicSystem.Core.Domain.Entities;
+using MedicSystem.Core.Domain.Enum;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -53,7 +54,7 @@ namespace MedicSystem.Core.Application.Services
             return citaVm;
 
         }
-        public Task Update(SaveCitasViewModel vm)
+        public async Task Update(SaveCitasViewModel vm)
         {
             Cita cita = new();
             cita.Id = vm.Id;
@@ -64,12 +65,20 @@ namespace MedicSystem.Core.Application.Services
             cita.PacienteId = vm.PacienteId;
             cita.MedicoId = vm.MedicoId;
 
-            return _citaRepository.UpdateAsync(cita);
+            await _citaRepository.UpdateAsync(cita);
         }
-        public Task Delete(int id)
+
+        public async Task UpdateState(int id, EstadoCita estadoCita)
         {
-            var cita = _citaRepository.GetByIdAsync(id);
-            return _citaRepository.DeleteAsync(cita.Result);
+            var cita = await _citaRepository.GetByIdAsync(id);
+            cita.EstadoCita = estadoCita;
+            await _citaRepository.UpdateAsync(cita);
+        }
+
+        public async Task Delete(int id)
+        {
+            var cita = await _citaRepository.GetByIdAsync(id);
+            await _citaRepository.DeleteAsync(cita);
         }
 
         public async Task<List<CitaViewModel>> GetAllViewModel()

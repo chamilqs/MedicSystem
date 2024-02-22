@@ -3,6 +3,7 @@ using MedicSystem.Core.Domain.Entities;
 using MedicSystem.Core.Domain.Common;
 using MedicSystem.Core.Application.Helpers;
 using Microsoft.AspNetCore.Http;
+using MedicSystem.Core.Application.ViewModels.Usuarios;
 
 namespace MedicSystem.Infrastructure.Persistence.Contexts
 {
@@ -10,6 +11,7 @@ namespace MedicSystem.Infrastructure.Persistence.Contexts
     {
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options) 
         {
+
         }
         public DbSet<Usuario> Usuarios { get; set; }
         public DbSet<Paciente> Pacientes { get; set; }
@@ -20,6 +22,7 @@ namespace MedicSystem.Infrastructure.Persistence.Contexts
 
         public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = new CancellationToken())
         {
+
             foreach (var entry in ChangeTracker.Entries<AuditableBaseEntity>())
             {
                 switch (entry.State)
@@ -111,8 +114,6 @@ namespace MedicSystem.Infrastructure.Persistence.Contexts
                       .IsRequired();
                 entity.Property(p => p.Alergias)
                       .IsRequired();
-                //entity.Property(p => p.Foto)
-                //      .IsRequired();
 
                 // Relaciones
                 entity.HasOne(p => p.Usuario)
@@ -150,16 +151,11 @@ namespace MedicSystem.Infrastructure.Persistence.Contexts
                 entity.Property(m => m.Cedula)
                       .IsRequired()
                       .HasMaxLength(50);
-                //entity.Property(m => m.Foto)
-                //      .IsRequired();
 
                 // Relaciones
                 entity.HasOne(m => m.Usuario)
                       .WithMany(m => m.Medicos)
                       .HasForeignKey(m => m.UsuarioId);
-                entity.HasMany(g => g.Pacientes)
-                      .WithMany(g => g.Medicos)
-                      .UsingEntity(j => j.ToTable("MedicosPacientes"));
                 entity.HasMany(m => m.Citas)
                       .WithOne(m => m.Medico)
                       .HasForeignKey(m => m.MedicoId)
@@ -184,8 +180,7 @@ namespace MedicSystem.Infrastructure.Persistence.Contexts
                       .IsRequired();
                 entity.Property(c => c.Causa)
                       .IsRequired();
-                entity.Property(c => c.EstadoCita)
-                      .IsRequired();
+               
 
                 // Relaciones
                 entity.HasOne(c => c.Medico)
@@ -196,8 +191,8 @@ namespace MedicSystem.Infrastructure.Persistence.Contexts
                       .WithMany(c => c.Citas)
                       .HasForeignKey(c => c.UsuarioId);
                 entity.HasMany(c => c.ResultadosDeLaboratorio)
-                      .WithMany(c => c.Citas)
-                      .UsingEntity(j => j.ToTable("CitasResultadosDeLaboratorio"));
+                      .WithOne(c => c.Cita)
+                      .HasForeignKey(c => c.CitaId);
             });
             #endregion
 
@@ -220,6 +215,10 @@ namespace MedicSystem.Infrastructure.Persistence.Contexts
                       .WithOne(p => p.PruebaDeLaboratorio)
                       .HasForeignKey(p => p.PruebaDeLaboratorioId)
                       .OnDelete(DeleteBehavior.Cascade);
+                entity.HasMany(p => p.Citas)
+                      .WithOne(p => p.PruebaDeLaboratorio)
+                      //.HasForeignKey(p => p.PruebaDeLaboratorioId)
+                      .OnDelete(DeleteBehavior.ClientCascade);
             });
 
 
@@ -235,9 +234,14 @@ namespace MedicSystem.Infrastructure.Persistence.Contexts
 
                 // Propiedades
                 entity.Property(r => r.Resultado)
-                      .IsRequired()
                       .HasMaxLength(500);
                 entity.Property(r => r.EstadoResultado)
+                      .IsRequired();
+                entity.Property(r => r.CitaId)
+                      .IsRequired();
+                entity.Property(r => r.PacienteId)
+                      .IsRequired();
+                entity.Property(r => r.PruebaDeLaboratorioId)
                       .IsRequired();
 
                 // Relaciones
@@ -245,10 +249,6 @@ namespace MedicSystem.Infrastructure.Persistence.Contexts
                       .WithMany(r => r.ResultadosDeLaboratorio)
                       .HasForeignKey(r => r.PacienteId)
                       .OnDelete(DeleteBehavior.NoAction);
-                //entity.HasMany(r => r.PruebasDeLaboratorio)
-                //      .WithOne(r => r.ResultadoDeLaboratorio)
-                //      .HasForeignKey(r => r.ResultadoDeLaboratorioId)
-                //      .OnDelete(DeleteBehavior.NoAction);
             });
 
 

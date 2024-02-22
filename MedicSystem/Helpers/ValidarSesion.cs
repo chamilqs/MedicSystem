@@ -25,6 +25,18 @@ namespace MedicSystem.Helpers
             return true;
         }
 
+        public bool isAdmin()
+        {
+            int ac = _httpContextAccessor.HttpContext.Session.Get<int>("AccessLevel");
+
+            if (ac == 1)
+            {
+                return false;
+            }
+            return true;
+
+        }
+
         
     }
 }

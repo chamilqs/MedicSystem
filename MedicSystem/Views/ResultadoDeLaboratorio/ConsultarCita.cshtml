@@ -1,0 +1,53 @@
+﻿@using MedicSystem.Core.Application.ViewModels.ResultadosDeLaboratorio;
+@model SaveResultadoDeLaboratorioViewModel
+@{
+    ViewData["Title"] = "Consultar resultado";
+}
+
+<div class="container-fluid">
+
+    <div class="row">
+        <div class="col-6 offset-3">
+            <div class="card">
+                <div class="card-header bg-dark text-light">
+                    <h4 class="text-center ">Recetando pruebas de laboratorio</h4>
+                </div>
+                <div class="card-body">
+                    <div class="mt-2 mb-2">
+                        @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+                    </div>
+                    @if (Model.PruebasDeLaboratorio == null || Model.PruebasDeLaboratorio.Count == 0)
+                    {
+                        <h4>No hay pruebas de laboratorio creados en el sistema.</h4>
+                    }
+                    else if (Model.Pacientes == null || Model.Pacientes.Count == 0)
+                    {
+                        <h4>No hay pacientes creados en el sistema.</h4>
+                    }
+                    else
+                    {
+                        <form method="post" asp-controller="ResultadoDeLaboratorio" asp-action="Consultar">
+
+                            <div class="mb-3">
+                                <label class="form-label">Pruebas a recetar: </label>
+                                <div>
+                                    @for (int i = 0; i < Model.PruebasDeLaboratorio.Count; i++)
+                                    {
+                                        <div class="form-check">
+                                            <input type="checkbox" name="PruebasDeLaboratorioIds" value="@Model.PruebasDeLaboratorio[i].Id" class="form-check-input" />
+                                            <label class="form-check-label">@Model.PruebasDeLaboratorio[i].Nombre</label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                            <button type="submit" class="btn btn-primary fw-bold">Realizar pruebas</button>
+                            <a asp-controller="Cita" asp-action="Index" class="btn btn-warning fw-bold">Regresar</a>
+                        </form>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>

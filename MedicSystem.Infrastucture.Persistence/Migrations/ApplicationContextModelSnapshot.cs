@@ -22,21 +22,6 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("CitaResultadoDeLaboratorio", b =>
-                {
-                    b.Property<int>("CitasId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ResultadosDeLaboratorioId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CitasId", "ResultadosDeLaboratorioId");
-
-                    b.HasIndex("ResultadosDeLaboratorioId");
-
-                    b.ToTable("CitasResultadosDeLaboratorio", (string)null);
-                });
-
             modelBuilder.Entity("MedicSystem.Core.Domain.Entities.Cita", b =>
                 {
                     b.Property<int>("Id")
@@ -55,7 +40,7 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
                     b.Property<string>("CreatedBy")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("EstadoCita")
+                    b.Property<int?>("EstadoCita")
                         .HasColumnType("int");
 
                     b.Property<string>("Fecha")
@@ -78,6 +63,12 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
                     b.Property<int>("PacienteId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PruebaDeLaboratorioId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ResultadoDeLaboratorioId")
+                        .HasColumnType("int");
+
                     b.Property<int>("UsuarioId")
                         .HasColumnType("int");
 
@@ -86,6 +77,10 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
                     b.HasIndex("MedicoId");
 
                     b.HasIndex("PacienteId");
+
+                    b.HasIndex("PruebaDeLaboratorioId");
+
+                    b.HasIndex("ResultadoDeLaboratorioId");
 
                     b.HasIndex("UsuarioId");
 
@@ -261,6 +256,9 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("CitaId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime?>("Created")
                         .HasColumnType("datetime2");
 
@@ -283,11 +281,12 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Resultado")
-                        .IsRequired()
                         .HasMaxLength(500)
                         .HasColumnType("nvarchar(500)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CitaId");
 
                     b.HasIndex("PacienteId");
 
@@ -348,36 +347,6 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
                     b.ToTable("Usuarios", (string)null);
                 });
 
-            modelBuilder.Entity("MedicoPaciente", b =>
-                {
-                    b.Property<int>("MedicosId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PacientesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("MedicosId", "PacientesId");
-
-                    b.HasIndex("PacientesId");
-
-                    b.ToTable("MedicosPacientes", (string)null);
-                });
-
-            modelBuilder.Entity("CitaResultadoDeLaboratorio", b =>
-                {
-                    b.HasOne("MedicSystem.Core.Domain.Entities.Cita", null)
-                        .WithMany()
-                        .HasForeignKey("CitasId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MedicSystem.Core.Domain.Entities.ResultadoDeLaboratorio", null)
-                        .WithMany()
-                        .HasForeignKey("ResultadosDeLaboratorioId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("MedicSystem.Core.Domain.Entities.Cita", b =>
                 {
                     b.HasOne("MedicSystem.Core.Domain.Entities.Medico", "Medico")
@@ -392,6 +361,15 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MedicSystem.Core.Domain.Entities.PruebaDeLaboratorio", "PruebaDeLaboratorio")
+                        .WithMany("Citas")
+                        .HasForeignKey("PruebaDeLaboratorioId")
+                        .OnDelete(DeleteBehavior.ClientCascade);
+
+                    b.HasOne("MedicSystem.Core.Domain.Entities.ResultadoDeLaboratorio", null)
+                        .WithMany("Citas")
+                        .HasForeignKey("ResultadoDeLaboratorioId");
+
                     b.HasOne("MedicSystem.Core.Domain.Entities.Usuario", "Usuario")
                         .WithMany("Citas")
                         .HasForeignKey("UsuarioId")
@@ -401,6 +379,8 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
                     b.Navigation("Medico");
 
                     b.Navigation("Paciente");
+
+                    b.Navigation("PruebaDeLaboratorio");
 
                     b.Navigation("Usuario");
                 });
@@ -436,6 +416,12 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
 
             modelBuilder.Entity("MedicSystem.Core.Domain.Entities.ResultadoDeLaboratorio", b =>
                 {
+                    b.HasOne("MedicSystem.Core.Domain.Entities.Cita", "Cita")
+                        .WithMany("ResultadosDeLaboratorio")
+                        .HasForeignKey("CitaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("MedicSystem.Core.Domain.Entities.Paciente", "Paciente")
                         .WithMany("ResultadosDeLaboratorio")
                         .HasForeignKey("PacienteId")
@@ -448,24 +434,16 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Cita");
+
                     b.Navigation("Paciente");
 
                     b.Navigation("PruebaDeLaboratorio");
                 });
 
-            modelBuilder.Entity("MedicoPaciente", b =>
+            modelBuilder.Entity("MedicSystem.Core.Domain.Entities.Cita", b =>
                 {
-                    b.HasOne("MedicSystem.Core.Domain.Entities.Medico", null)
-                        .WithMany()
-                        .HasForeignKey("MedicosId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("MedicSystem.Core.Domain.Entities.Paciente", null)
-                        .WithMany()
-                        .HasForeignKey("PacientesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("ResultadosDeLaboratorio");
                 });
 
             modelBuilder.Entity("MedicSystem.Core.Domain.Entities.Medico", b =>
@@ -482,11 +460,15 @@ namespace MedicSystem.Infrastucture.Persistence.Migrations
 
             modelBuilder.Entity("MedicSystem.Core.Domain.Entities.PruebaDeLaboratorio", b =>
                 {
+                    b.Navigation("Citas");
+
                     b.Navigation("ResultadosDeLaboratorio");
                 });
 
             modelBuilder.Entity("MedicSystem.Core.Domain.Entities.ResultadoDeLaboratorio", b =>
                 {
+                    b.Navigation("Citas");
+
                     b.Navigation("PruebasDeLaboratorio");
                 });
 

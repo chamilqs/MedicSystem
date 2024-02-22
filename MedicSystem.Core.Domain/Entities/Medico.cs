@@ -12,9 +12,6 @@ namespace MedicSystem.Core.Domain.Entities
         public string Cedula { get; set; }
         public string? Foto { get; set; }
 
-        // Un medico puede tener muchos pacientes
-        public ICollection<Paciente>? Pacientes { get; set; }
-
         // Un medico puede tener muchas citas
         public ICollection<Cita> Citas { get; set; }
 
